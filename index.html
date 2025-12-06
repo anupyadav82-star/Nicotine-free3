@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quit Tobacco Journey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-main: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(148, 163, 184, 0.32);
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.15);
+      --accent-strong: #16a34a;
+      --danger: #f97373;
+      --text-primary: #f9fafb;
+      --text-muted: #9ca3af;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --radius-xl: 22px;
+      --transition-fast: 180ms ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 18px 12px 26px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      margin: auto;
+      position: relative;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .hero-screen,
+    .dashboard-screen {
+      animation: fadeInUp 260ms ease-out;
+    }
+
+    .hero-screen {
+      padding: 26px 22px 30px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    .hero-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.35);
+    }
+
+    .hero-title {
+      font-size: 26px;
+      line-height: 1.3;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .hero-highlight {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .hero-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .hero-quote {
+      font-size: 13px;
+      color: var(--text-muted);
+      border-left: 2px solid rgba(148, 163, 184, 0.5);
+      padding-left: 12px;
+      margin-bottom: 28px;
+    }
+
+    .hero-cta {
+      margin-top: 12px;
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background-image: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 18px 40px rgba(34, 197, 94, 0.32);
+      color: #022c22;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+    }
+
+    .primary-btn:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 10px 28px rgba(34, 197, 94, 0.3);
+      filter: brightness(0.96);
+    }
+
+    .primary-btn:hover {
+      filter: brightness(1.03);
+    }
+
+    .secondary-text {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    .secondary-text span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Dashboard */
+
+    .dashboard-screen {
+      display: none;
+      padding: 20px 16px 22px;
+      gap: 16px;
+      display: none;
+      flex-direction: column;
+    }
+
+    .dashboard-screen.active {
+      display: flex;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 4px 2px;
+    }
+
+    .profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #22c55e, #16a34a 40%, #064e3b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #ecfdf5;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9);
+    }
+
+    .profile-text-main {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .profile-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .top-pill {
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.88);
+    }
+
+    .stats-card {
+      padding: 18px 16px 16px;
+      margin-bottom: 10px;
+    }
+
+    .stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .stats-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .stats-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: 1px solid rgba(34, 197, 94, 0.45);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .stat-item {
+      padding: 10px 10px 8px;
+      border-radius: 16px;
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(55, 65, 81, 0.8);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .quit-row {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quit-row-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .quit-row-value {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .edit-link {
+      font-size: 11px;
+      color: var(--accent);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .actions-card {
+      padding: 14px 16px 12px;
+      margin-top: 6px;
+    }
+
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .pill-btn {
+      flex: 1;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .pill-btn span.icon {
+      font-size: 13px;
+    }
+
+    .pill-btn.primary {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.8);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .pill-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .micro-copy {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .continue-btn-wrap {
+      margin-top: 8px;
+    }
+
+    .continue-btn {
+      width: 100%;
+      border-radius: 16px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 11px 12px;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.18));
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .continue-btn:active {
+      transform: translateY(1px);
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Setup form (edit plan) */
+
+    .plan-sheet {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+      display: none;
+    }
+
+    .plan-sheet.active {
+      display: block;
+      animation: fadeIn 180ms ease-out;
+    }
+
+    .plan-title {
+      font-size: 12px;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .form-field {
+      flex: 1;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-primary);
+      font-size: 12px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    .save-plan-btn {
+      margin-top: 4px;
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(34, 197, 94, 0.12);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Animations */
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .hero-title {
+        font-size: 22px;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+
+    <!-- HERO / START SCREEN -->
+    <section id="heroScreen" class="glass-card hero-screen">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>Quit Journey • Day 0</span>
+      </div>
+
+      <h1 class="hero-title">
+        I am free from <span class="hero-highlight">nicotine</span> “disease”
+      </h1>
+      <p class="hero-subtitle">
+        One day • One decision • One powerful story
+      </p>
+
+      <p class="hero-quote">
+        “Har naya din ek fresh start hai. Aaj se aap apne body, mind
+        aur future ko respect kar rahe ho.”
+      </p>
+
+      <div class="hero-cta">
+        <button id="enterJourneyBtn" class="primary-btn">
+          Enter your journey
+        </button>
+        <p class="secondary-text">
+          Tap once. <span>Your new chapter starts here.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD SCREEN -->
+    <section id="dashboardScreen" class="dashboard-screen">
+      <div class="top-bar">
+        <div class="profile-chip">
+          <div class="avatar" id="avatarInitial">F</div>
+          <div>
+            <div class="profile-text-main" id="profileName">Friend</div>
+            <div class="profile-text-sub">Nicotine-free in progress</div>
+          </div>
+        </div>
+        <div class="top-pill" id="topDayLabel">
+          Day 0 • Just started
+        </div>
+      </div>
+
+      <div class="glass-card stats-card">
+        <div class="stats-header">
+          <div>
+            <p class="stats-title">Quit Journey</p>
+          </div>
+          <span class="stats-pill">Live progress</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <p class="stat-label">Days Tobacco-Free</p>
+            <p class="stat-value" id="daysFree">0</p>
+          </div>
+
+          <div class="stat-item">
+            <p class="stat-label">Health Regained</p>
+            <p class="stat-value" id="healthHours">0h</p>
+            <p class="stat-sub" id="healthMinutes">0 minutes</p>
+          </div>
+
+          <div class="stat-item">
+            <p class="stat-label">Money Saved</p>
+            <p class="stat-value" id="moneySaved">₹0</p>
+            <p class="stat-sub" id="dailySpendHint">Daily spend: ₹0</p>
+          </div>
+
+          <div class="stat-item">
+            <p class="stat-label">Urges Handled</p>
+            <p class="stat-value" id="urgesHandled">0</p>
+            <p class="stat-sub">Each urge beaten = 1 victory</p>
+          </div>
+        </div>
+
+        <div class="quit-row">
+          <div>
+            <p class="quit-row-label">Quit Date</p>
+            <p class="quit-row-value" id="quitDateLabel">–</p>
+          </div>
+          <div>
+            <span id="editPlanLink" class="edit-link">Edit plan</span>
+          </div>
+        </div>
+
+        <!-- Hidden plan sheet -->
+        <div id="planSheet" class="plan-sheet">
+          <p class="plan-title">Your quit plan</p>
+          <form id="planForm">
+            <div class="form-row">
+              <div class="form-field">
+                <label for="nameInput">Your name</label>
+                <input id="nameInput" type="text" placeholder="Friend" />
+              </div>
+              <div class="form-field">
+                <label for="quitDateInput">Quit date</label>
+                <input id="quitDateInput" type="date" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="spendInput">Daily spend (₹)</label>
+                <input id="spendInput" type="number" min="0" step="1" placeholder="100" />
+              </div>
+              <div class="form-field">
+                <label for="healthPerDayInput">Health gain / day (mins)</label>
+                <input id="healthPerDayInput" type="number" min="1" step="1" placeholder="60" />
+              </div>
+            </div>
+
+            <button type="submit" class="save-plan-btn">
+              Save plan
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="glass-card actions-card">
+        <div class="actions-row">
+          <button id="urgeBtn" class="pill-btn primary">
+            <span class="icon">🔥</span>
+            <span>I beat a craving</span>
+          </button>
+          <button id="resetBtn" class="pill-btn">
+            <span class="icon">⏹</span>
+            <span>Reset journey</span>
+          </button>
+        </div>
+        <p class="micro-copy">
+          Every time you defeat an urge, tap “I beat a craving”. App will remember your streak.
+        </p>
+
+        <div class="continue-btn-wrap">
+          <button class="continue-btn">
+            <span>Continue</span>
+            <span>›</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="footer-note">
+        You are not “trying” to quit. <br />
+        You are <strong>already</strong> moving away from nicotine — one clear choice at a time.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    // ----- Storage Keys -----
+    const STORAGE_KEY_PROFILE = "qt_profile_v1";
+    const STORAGE_KEY_URGES = "qt_urges_v1";
+
+    // ----- DOM Elements -----
+    const heroScreen = document.getElementById("heroScreen");
+    const dashboardScreen = document.getElementById("dashboardScreen");
+    const enterJourneyBtn = document.getElementById("enterJourneyBtn");
+
+    const profileNameEl = document.getElementById("profileName");
+    const avatarInitialEl = document.getElementById("avatarInitial");
+    const topDayLabelEl = document.getElementById("topDayLabel");
+
+    const daysFreeEl = document.getElementById("daysFree");
+    const healthHoursEl = document.getElementById("healthHours");
+    const healthMinutesEl = document.getElementById("healthMinutes");
+    const moneySavedEl = document.getElementById("moneySaved");
+    const dailySpendHintEl = document.getElementById("dailySpendHint");
+    const urgesHandledEl = document.getElementById("urgesHandled");
+    const quitDateLabelEl = document.getElementById("quitDateLabel");
+
+    const editPlanLinkEl = document.getElementById("editPlanLink");
+    const planSheetEl = document.getElementById("planSheet");
+    const planFormEl = document.getElementById("planForm");
+    const nameInputEl = document.getElementById("nameInput");
+    const quitDateInputEl = document.getElementById("quitDateInput");
+    const spendInputEl = document.getElementById("spendInput");
+    const healthPerDayInputEl = document.getElementById("healthPerDayInput");
+
+    const urgeBtnEl = document.getElementById("urgeBtn");
+    const resetBtnEl = document.getElementById("resetBtn");
+
+    // ----- Helpers -----
+
+    function loadProfile() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_PROFILE);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse profile", e);
+        return null;
+      }
+    }
+
+    function saveProfile(profile) {
+      localStorage.setItem(STORAGE_KEY_PROFILE, JSON.stringify(profile));
+    }
+
+    function loadUrges() {
+      const val = localStorage.getItem(STORAGE_KEY_URGES);
+      return val ? parseInt(val, 10) || 0 : 0;
+    }
+
+    function saveUrges(count) {
+      localStorage.setItem(STORAGE_KEY_URGES, String(count));
+    }
+
+    function calculateDaysSince(dateStr) {
+      if (!dateStr) return 0;
+      const quitDate = new Date(dateStr + "T00:00:00");
+      const now = new Date();
+      const diffMs = now - quitDate;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      return diffDays < 0 ? 0 : diffDays;
+    }
+
+    // ----- UI Update -----
+
+    function updateUI() {
+      const profile = loadProfile() || {};
+      const urges = loadUrges();
+
+      const name = profile.name || "Friend";
+      const quitDateStr = profile.quitDate || "";
+      const dailySpend = Number(profile.dailySpend || 0);
+      const healthPerDayMinutes = Number(profile.healthPerDayMinutes || 60);
+
+      // Name & avatar
+      profileNameEl.textContent = name;
+      avatarInitialEl.textContent = name.trim()[0] ? name.trim()[0].toUpperCase() : "F";
+
+      // Stats
+      const daysFree = calculateDaysSince(quitDateStr);
+      daysFreeEl.textContent = daysFree;
+
+      const totalHealthMinutes = daysFree * healthPerDayMinutes;
+      const hours = Math.floor(totalHealthMinutes / 60);
+      const mins = totalHealthMinutes % 60;
+      healthHoursEl.textContent = hours + "h";
+      healthMinutesEl.textContent = mins + " minutes";
+
+      const moneySaved = daysFree * dailySpend;
+      moneySavedEl.textContent = "₹" + moneySaved.toLocaleString("en-IN");
+      dailySpendHintEl.textContent = "Daily spend: ₹" + dailySpend.toLocaleString("en-IN");
+
+      urgesHandledEl.textContent = urges.toString();
+
+      quitDateLabelEl.textContent = quitDateStr || "–";
+
+      // Top pill
+      if (!quitDateStr) {
+        topDayLabelEl.textContent = "Day 0 • Just started";
+      } else if (daysFree <= 0) {
+        topDayLabelEl.textContent = "Day 0 • Quit today";
+      } else if (daysFree === 1) {
+        topDayLabelEl.textContent = "Day 1 • Fresh freedom";
+      } else {
+        topDayLabelEl.textContent = "Day " + daysFree + " • Keep going";
+      }
+
+      // Prefill form
+      nameInputEl.value = name === "Friend" ? "" : name;
+      quitDateInputEl.value = quitDateStr;
+      spendInputEl.value = dailySpend || "";
+      healthPerDayInputEl.value = healthPerDayMinutes || "";
+    }
+
+    // ----- Event Listeners -----
+
+    enterJourneyBtn.addEventListener("click", () => {
+      heroScreen.style.display = "none";
+      dashboardScreen.classList.add("active");
+      updateUI();
+    });
+
+    editPlanLinkEl.addEventListener("click", () => {
+      planSheetEl.classList.toggle("active");
+    });
+
+    planFormEl.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const profile = {
+        name: nameInputEl.value.trim() || "Friend",
+        quitDate: quitDateInputEl.value || "",
+        dailySpend: Number(spendInputEl.value || 0),
+        healthPerDayMinutes: Number(healthPerDayInputEl.value || 60),
+      };
+      saveProfile(profile);
+      updateUI();
+      planSheetEl.classList.remove("active");
+    });
+
+    urgeBtnEl.addEventListener("click", () => {
+      const current = loadUrges();
+      const next = current + 1;
+      saveUrges(next);
+      urgesHandledEl.textContent = next.toString();
+    });
+
+    resetBtnEl.addEventListener("click", () => {
+      if (!confirm("Reset your quit journey stats?")) return;
+      localStorage.removeItem(STORAGE_KEY_PROFILE);
+      localStorage.removeItem(STORAGE_KEY_URGES);
+      updateUI();
+    });
+
+    // ----- Auto-open dashboard if user already has data -----
+    (function init() {
+      const existingProfile = loadProfile();
+      if (existingProfile) {
+        heroScreen.style.display = "none";
+        dashboardScreen.classList.add("active");
+        updateUI();
+      }
+    })();
+  </script>
+</body>
+</html>
